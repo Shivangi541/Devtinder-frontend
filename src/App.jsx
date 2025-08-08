@@ -1,14 +1,21 @@
-import NavBar from "./NavBar"; // ES Modules
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Body from "./Body";
+import Login from "./Login";
+import Profile from "./Profile";
 function App() {
   return (
     <>
       <BrowserRouter basename="/"> {/* all routing starts from here*/ }
         <Routes>
-          
+          <Route path="/" element={<Body />}>
+               <Route path = "/login" element = {<Login />}/>
+               <Route path ="/profile" element = {<Profile />}/>
+          </Route>
+
+        
         </Routes>
-        <NavBar />
+        
       </BrowserRouter>
     </>
   );
