@@ -1,8 +1,27 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React from 'react';
+import { useSelector ,useDispatch} from 'react-redux';
+import { Link,useNavigate } from 'react-router-dom'; // ✅ You need this import
+import api from './api'; // Import your API utility
+import { removeUser } from './utils/userSlice';
 const NavBar = () => {
   const user = useSelector((store) => store.user);
-return (
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    // Implement logout functionality here
+    try{
+       await api.post("/logout", {}, {
+        withCredentials: true // Ensure cookies are sent with the request
+      })
+      dispatch(removeUser());// clear the redux store
+      return navigate("/login");
+
+    }
+    catch(error){
+      console.error("Logout failed:", error);
+    }
+  };
+  return (
     <div className="navbar bg-base-300">
       <div className="flex-1">
         <Link to="/" className="btn btn-ghost text-xl">
@@ -19,7 +38,11 @@ return (
               className="btn btn-ghost btn-circle avatar"
             >
               <div className="w-10 rounded-full">
-                <img alt="user photo" src={user.photoUrl} />
+                <img
+                  alt="user photo"
+                    src={user?.photoUrl || "/default-avatar.png"}
+                      />
+
               </div>
             </div>
             <ul
@@ -35,7 +58,6 @@ return (
               <li>
                 <Link to="/connections">Connections</Link>
               </li>
-
               <li>
                 <Link to="/requests">Requests</Link>
               </li>
@@ -43,7 +65,7 @@ return (
                 <Link to="/premium">Premium</Link>
               </li>
               <li>
-                <a >Logout</a>
+                <a onClick={handleLogout}>Logout</a>
               </li>
             </ul>
           </div>
@@ -52,4 +74,5 @@ return (
     </div>
   );
 };
+
 export default NavBar;
